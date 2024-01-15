@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("express");
 const connection = require("./connection");
 const userRoute = require("./routes/user.route");
 const { logout } = require("./controllers/user.controller");
@@ -10,6 +11,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/users", userRoute);
 
