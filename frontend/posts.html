@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Insta Masai</title>
+  </head>
+  <body>
+    <nav>
+      <h1>InstaMasai</h1>
+      <a href="./index.html">HOME</a>
+      <a href="./login.html">LOGIN</a>
+      <a href="./signup.html">SIGNUP</a>
+      <a href="./posts.html">POSTS</a>
+    </nav>
+    <h1>Welcome to Insta Masai Application</h1>
+    <p>Here you can see your posts</p>
+    <div id="show-posts">
+      <!-- show posts here -->
+    </div>
+    <div class="update-post">
+      <h1>Update your post here...</h1>
+      <label for="title">Title:</label>
+      <input type="text" name="title" id="title" />
+      <label for="body">Body:</label>
+      <input type="text" name="body" id="body" />
+      <label for="device">Device:</label>
+      <select name="device" id="device">
+        <option value="Laptop">Laptop</option>
+        <option value="Tablet">Tablet</option>
+        <option value="Mobile">Mobile</option>
+      </select>
+      <label for="no_of_comments">No of Comments:</label>
+      <input type="number" name="no_of_comments" id="no_of_comments" />
+      <button onclick="updatePost()">UPDATE</button>
+    </div>
+  </body>
+  <script>
+    const instaMasaiURL = "https://puce-vivacious-sturgeon.cyclic.app";
+    const showPosts = document.getElementById("show-posts");
+
+    // update fields
+    const upTitle = document.getElementById("title");
+    const upBody = document.getElementById("body");
+    const upDevice = document.getElementById("device");
+    const upNo_of_comments = document.getElementById("no_of_comments");
+
+    var updatePostID;
+
+    window.addEventListener("load", () => {
+      fetch(`${instaMasaiURL}/posts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.message) {
+            showPosts.innerText = data.message;
+          } else if (data.posts) {
+            createAndRenderPosts(data.posts);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+
+    function createAndRenderPosts(posts) {
+      posts.forEach((post) => {
+        showPosts.appendChild(createPostCard(post));
+      });
+    }
+
+    function createPostCard(post) {
+      const postCard = document.createElement("div");
+
+      const title = document.createElement("h3");
+      title.innerText = post.title;
+      postCard.appendChild(title);
+
+      const body = document.createElement("p");
+      body.innerText = post.body;
+      postCard.appendChild(body);
+
+      const device = document.createElement("p");
+      device.innerText = post.device;
+      postCard.appendChild(device);
+
+      const noofcomments = document.createElement("p");
+      noofcomments.innerText = post.no_of_comments;
+      postCard.appendChild(noofcomments);
+
+      const edit = document.createElement("button");
+      edit.setAttribute("id", "edit");
+      edit.innerText = "Edit";
+      postCard.appendChild(edit);
+
+      edit.addEventListener("click", (e) => {
+        upTitle.innerText = post.title;
+        upBody.innerText = post.body;
+        upDevice.innerText = post.device;
+        upNo_of_comments.innerText = post.no_of_comments;
+        updatePostID = post._id;
+      });
+
+      const deletePost = document.createElement("button");
+      edit.setAttribute("id", "deletePost");
+      edit.innerText = "Delete";
+      postCard.appendChild(deletePost);
+
+      deletePost.addEventListener("click", (e) => {
+        fetch(`${instaMasaiURL}/posts/${post._id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("token")
+            )}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data.message);
+          })
+          .catch((error) => console.error(error));
+      });
+
+      return postCard;
+    }
+
+    function updatePost() {
+      const title = upTitle.value;
+      const body = upBody.value;
+      const device = upDevice.value;
+      const no_of_comments = upNo_of_comments.value;
+
+      fetch(`${instaMasaiURL}/update/${updatePostID}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
+        },
+        body: JSON.stringify({ title, body, device, no_of_comments }),
+      })
+        .then((res) => res.json())
+        .then((data) => console.log(data.message))
+        .catch((error) => console.log(error));
+    }
+  </script>
+</html>

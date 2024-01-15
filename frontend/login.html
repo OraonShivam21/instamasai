@@ -29,11 +29,26 @@
     </div>
   </body>
   <script>
-    const instaMasaiURL = "";
+    const instaMasaiURL = "https://puce-vivacious-sturgeon.cyclic.app";
     function loginForm() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      fetch(``)
+      fetch(`${instaMasaiURL}/users/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.message);
+          if (data.accessToken) {
+            localStorage.setItem("token", JSON.stringify(data.accessToken));
+            window.location.replace("./posts.html");
+          }
+        })
+        .catch((error) => console.log(error));
     }
   </script>
 </html>
