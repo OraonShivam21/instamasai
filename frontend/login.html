@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <nav>
+      <h1>InstaMasai</h1>
+      <a href="./index.html">HOME</a>
+      <a href="./login.html">LOGIN</a>
+      <a href="./signup.html">SIGNUP</a>
+      <a href="./posts.html">POSTS</a>
+    </nav>
+
+    <div class="login-form">
+      <h1>Login here...</h1>
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" placeholder="Enter email" />
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Enter password"
+      />
+      <button onclick="loginForm()">LOGIN</button>
+    </div>
+  </body>
+  <script>
+    const instaMasaiURL = "";
+    function loginForm() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      fetch(``)
+    }
+  </script>
+</html>
