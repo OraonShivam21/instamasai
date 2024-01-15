@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("express");
+const cors = require("cors");
 const connection = require("./connection");
 const userRoute = require("./routes/user.route");
 const { logout } = require("./controllers/user.controller");
